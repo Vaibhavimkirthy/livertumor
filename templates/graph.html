@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Training Performance Graph</title>
+
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            font-family: Arial, sans-serif;
+
+            background: linear-gradient(
+                135deg,
+                #eef1f7,
+                #dfe5ef
+            );
+
+            min-height: 100vh;
+
+            color: #222;
+        }
+
+
+        /* ==========================================
+           NAVBAR
+        ========================================== */
+
+        nav {
+
+            background: #1f5fa3;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            padding: 20px 55px;
+
+            color: white;
+        }
+
+
+        .logo {
+
+            font-size: 28px;
+
+            font-weight: bold;
+        }
+
+
+        .nav-links {
+
+            display: flex;
+
+            gap: 30px;
+
+            list-style: none;
+        }
+
+
+        .nav-links a {
+
+            color: white;
+
+            text-decoration: none;
+
+            font-size: 20px;
+
+            transition: 0.3s;
+        }
+
+
+        .nav-links a:hover {
+
+            color: #cfe4ff;
+        }
+
+
+        /* ==========================================
+           MAIN CONTAINER
+        ========================================== */
+
+        .container {
+
+            width: 90%;
+
+            max-width: 1200px;
+
+            margin: auto;
+
+            padding: 35px 0 60px;
+        }
+
+
+        /* ==========================================
+           PAGE TITLE
+        ========================================== */
+
+        .page-title {
+
+            text-align: center;
+
+            margin-bottom: 30px;
+        }
+
+
+        .page-title h1 {
+
+            color: #24568d;
+
+            font-size: 38px;
+
+            margin-bottom: 10px;
+        }
+
+
+        .page-title p {
+
+            font-size: 17px;
+
+            color: #555;
+        }
+
+
+        /* ==========================================
+           GRAPH CARD
+        ========================================== */
+
+        .graph-card {
+
+            background: white;
+
+            border-radius: 18px;
+
+            padding: 30px;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0, 0, 0, 0.12);
+
+            margin-bottom: 30px;
+        }
+
+
+        .graph-card h2 {
+
+            text-align: center;
+
+            color: #24568d;
+
+            font-size: 25px;
+
+            margin-bottom: 10px;
+        }
+
+
+        .graph-card p {
+
+            text-align: center;
+
+            color: #555;
+
+            margin-bottom: 25px;
+
+            font-size: 16px;
+        }
+
+
+        /* ==========================================
+           CHART CONTAINER
+        ========================================== */
+
+        .chart-container {
+
+            position: relative;
+
+            height: 450px;
+
+            width: 100%;
+        }
+
+
+        /* ==========================================
+           BEST RESULT BOX
+        ========================================== */
+
+        .best-result {
+
+            background: #eaf2fc;
+
+            border-left: 5px solid #1f5fa3;
+
+            border-radius: 12px;
+
+            padding: 22px;
+
+            text-align: center;
+
+            margin-bottom: 25px;
+        }
+
+
+        .best-result h3 {
+
+            color: #24568d;
+
+            font-size: 20px;
+
+            margin-bottom: 12px;
+        }
+
+
+        .best-result p {
+
+            font-size: 17px;
+
+            color: #333;
+        }
+
+
+        .best-result span {
+
+            font-weight: bold;
+
+            color: #1f5fa3;
+        }
+
+
+        /* ==========================================
+           METRIC CARDS
+        ========================================== */
+
+        .metrics {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 20px;
+        }
+
+
+        .metric-card {
+
+            background: white;
+
+            border-top: 3px solid #1f5fa3;
+
+            border-radius: 12px;
+
+            padding: 25px;
+
+            text-align: center;
+
+            box-shadow:
+                0 4px 12px
+                rgba(0, 0, 0, 0.08);
+        }
+
+
+        .metric-card h3 {
+
+            color: #555;
+
+            font-size: 17px;
+
+            margin-bottom: 10px;
+        }
+
+
+        .metric-card p {
+
+            color: #24568d;
+
+            font-size: 28px;
+
+            font-weight: bold;
+        }
+
+
+        /* ==========================================
+           RESPONSIVE DESIGN
+        ========================================== */
+
+        @media screen and (max-width: 768px) {
+
+            nav {
+
+                flex-direction: column;
+
+                gap: 15px;
+
+                padding: 20px;
+            }
+
+
+            .nav-links {
+
+                gap: 15px;
+
+                flex-wrap: wrap;
+
+                justify-content: center;
+            }
+
+
+            .nav-links a {
+
+                font-size: 16px;
+            }
+
+
+            .page-title h1 {
+
+                font-size: 28px;
+            }
+
+
+            .metrics {
+
+                grid-template-columns: 1fr;
+            }
+
+
+            .chart-container {
+
+                height: 350px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- ==========================================
+         NAVBAR
+    ========================================== -->
+
+    <nav>
+
+        <div class="logo">
+
+            Liver Tumor Detection
+
+        </div>
+
+
+        <ul class="nav-links">
+
+            <li>
+                <a href="/">
+                    Home
+                </a>
+            </li>
+
+
+            <li>
+                <a href="/prediction">
+                    Prediction
+                </a>
+            </li>
+
+
+            <li>
+                <a href="/dashboard">
+                    Dashboard
+                </a>
+            </li>
+
+
+            <li>
+                <a href="/graph">
+                    Graph
+                </a>
+            </li>
+
+
+            <li>
+                <a href="/about">
+                    About
+                </a>
+            </li>
+
+        </ul>
+
+    </nav>
+
+
+
+    <!-- ==========================================
+         MAIN CONTENT
+    ========================================== -->
+
+    <div class="container">
+
+
+        <!-- PAGE TITLE -->
+
+        <div class="page-title">
+
+            <h1>
+
+                SANet Training Performance Analysis
+
+            </h1>
+
+
+            <p>
+
+                Visualization of Dice Score improvement
+                across different training epochs
+
+            </p>
+
+        </div>
+
+
+
+        <!-- ==========================================
+             EPOCH VS DICE SCORE GRAPH
+        ========================================== -->
+
+        <div class="graph-card">
+
+
+            <h2>
+
+                Epoch vs Dice Score
+
+            </h2>
+
+
+            <p>
+
+                The graph shows the validation Dice Score
+                across different training epochs of the
+                SANet model.
+
+            </p>
+
+
+            <div class="chart-container">
+
+                <canvas id="diceChart"></canvas>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ==========================================
+             BEST RESULT
+        ========================================== -->
+
+        <div class="best-result">
+
+            <h3>
+
+                Best Training Performance
+
+            </h3>
+
+
+            <p>
+
+                Best Validation Dice Score:
+
+                <span>
+                    48.93%
+                </span>
+
+                achieved at
+
+                <span>
+                    Epoch 10
+                </span>
+
+            </p>
+
+        </div>
+
+
+
+        <!-- ==========================================
+             METRIC CARDS
+        ========================================== -->
+
+        <div class="metrics">
+
+
+            <!-- INITIAL DICE SCORE -->
+
+            <div class="metric-card">
+
+                <h3>
+
+                    Initial Dice Score
+
+                </h3>
+
+
+                <p>
+
+                    21.02%
+
+                </p>
+
+            </div>
+
+
+
+            <!-- FINAL DICE SCORE -->
+
+            <div class="metric-card">
+
+                <h3>
+
+                    Final Dice Score
+
+                </h3>
+
+
+                <p>
+
+                    48.93%
+
+                </p>
+
+            </div>
+
+
+
+            <!-- BEST EPOCH -->
+
+            <div class="metric-card">
+
+                <h3>
+
+                    Best Epoch
+
+                </h3>
+
+
+                <p>
+
+                    10
+
+                </p>
+
+            </div>
+
+
+
+            <!-- DICE SCORE GAIN -->
+
+            <div class="metric-card">
+
+                <h3>
+
+                    Dice Score Gain
+
+                </h3>
+
+
+                <p>
+
+                    +27.91%
+
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ==========================================
+         CHART JAVASCRIPT
+    ========================================== -->
+
+    <script>
+
+        const ctx = document
+            .getElementById("diceChart")
+            .getContext("2d");
+
+
+        new Chart(ctx, {
+
+            type: "line",
+
+
+            data: {
+
+                labels: [
+
+                    "Epoch 1",
+                    "Epoch 2",
+                    "Epoch 3",
+                    "Epoch 4",
+                    "Epoch 5",
+                    "Epoch 6",
+                    "Epoch 7",
+                    "Epoch 8",
+                    "Epoch 9",
+                    "Epoch 10"
+
+                ],
+
+
+                datasets: [
+
+                    {
+
+                        label: "Validation Dice Score (%)",
+
+
+                        data: [
+
+                            21.02,
+                            30.67,
+                            38.46,
+                            35.90,
+                            40.73,
+                            43.04,
+                            28.72,
+                            28.17,
+                            36.92,
+                            48.93
+
+                        ],
+
+
+                        borderColor: "#1f5fa3",
+
+
+                        backgroundColor:
+                            "rgba(31, 95, 163, 0.15)",
+
+
+                        borderWidth: 3,
+
+
+                        fill: true,
+
+
+                        tension: 0.4,
+
+
+                        pointRadius: 5,
+
+
+                        pointHoverRadius: 8,
+
+
+                        pointBackgroundColor: "#ffffff",
+
+
+                        pointBorderColor: "#1f5fa3",
+
+
+                        pointBorderWidth: 3
+
+                    }
+
+                ]
+
+            },
+
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+
+                plugins: {
+
+                    legend: {
+
+                        display: true,
+
+                        position: "top"
+
+                    },
+
+
+                    title: {
+
+                        display: true,
+
+                        text:
+                            "SANet Validation Dice Score Across Training Epochs",
+
+
+                        font: {
+
+                            size: 18
+
+                        }
+
+                    },
+
+
+                    tooltip: {
+
+                        callbacks: {
+
+                            label: function(context) {
+
+                                return (
+                                    "Dice Score: "
+                                    +
+                                    context.parsed.y
+                                    +
+                                    "%"
+                                );
+
+                            }
+
+                        }
+
+                    }
+
+                },
+
+
+                scales: {
+
+                    x: {
+
+                        title: {
+
+                            display: true,
+
+                            text: "Training Epochs",
+
+
+                            font: {
+
+                                size: 15
+
+                            }
+
+                        }
+
+                    },
+
+
+                    y: {
+
+                        beginAtZero: true,
+
+                        max: 100,
+
+
+                        title: {
+
+                            display: true,
+
+                            text:
+                                "Validation Dice Score (%)",
+
+
+                            font: {
+
+                                size: 15
+
+                            }
+
+                        },
+
+
+                        ticks: {
+
+                            stepSize: 10,
+
+
+                            callback: function(value) {
+
+                                return value + "%";
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        });
+
+    </script>
+
+
+</body>
+
+</html>

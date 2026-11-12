@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Federated Learning Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        .dashboard-container {
+            width: 92%;
+            max-width: 1200px;
+            margin: 30px auto;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .dashboard-header h1 {
+            color: #0066cc;
+            font-size: 38px;
+            margin-bottom: 8px;
+        }
+
+        .dashboard-header p {
+            color: #555;
+            font-size: 17px;
+        }
+
+
+        /* =========================
+           SUMMARY CARDS
+        ========================= */
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            text-align: center;
+
+            box-shadow:
+                0 3px 12px rgba(0,0,0,0.12);
+        }
+
+        .summary-card h3 {
+            color: #555;
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+
+        .summary-value {
+            color: #0066cc;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+
+        /* =========================
+           SECTIONS
+        ========================= */
+
+        .dashboard-section {
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+
+            box-shadow:
+                0 3px 12px rgba(0,0,0,0.12);
+
+            margin-bottom: 25px;
+        }
+
+        .dashboard-section h2 {
+            color: #0066cc;
+            margin-bottom: 20px;
+        }
+
+
+        /* =========================
+           FEDERATED FLOW
+        ========================= */
+
+        .hospital-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+        }
+
+        .hospital-card {
+            background: #f4f7fc;
+
+            border-top: 4px solid #0066cc;
+
+            padding: 18px 10px;
+
+            border-radius: 10px;
+
+            text-align: center;
+        }
+
+        .hospital-card h3 {
+            color: #0066cc;
+            margin-bottom: 12px;
+        }
+
+        .hospital-card p {
+            color: #444;
+            margin: 7px 0;
+            font-size: 14px;
+        }
+
+        .flow-arrow {
+            text-align: center;
+            color: #0066cc;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 18px 0;
+        }
+
+        .server-box {
+            background: #eaf3ff;
+
+            border: 2px solid #0066cc;
+
+            padding: 22px;
+
+            border-radius: 12px;
+
+            text-align: center;
+
+            max-width: 500px;
+
+            margin: auto;
+        }
+
+        .server-box h3 {
+            color: #0066cc;
+            font-size: 23px;
+            margin-bottom: 12px;
+        }
+
+        .server-box p {
+            margin: 7px;
+            color: #333;
+        }
+
+
+        /* =========================
+           PRIVACY
+        ========================= */
+
+        .privacy-box {
+            background: #f4f7fc;
+
+            border-left: 5px solid #0066cc;
+
+            padding: 18px;
+
+            margin-top: 22px;
+
+            border-radius: 8px;
+
+            line-height: 1.6;
+
+            color: #333;
+        }
+
+
+        /* =========================
+           HOSPITAL TABLE
+        ========================= */
+
+        .hospital-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .hospital-table th {
+            background: #0066cc;
+            color: white;
+            padding: 12px;
+        }
+
+        .hospital-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .hospital-table tr:nth-child(even) {
+            background: #f7f9fc;
+        }
+
+        .status {
+            color: green;
+            font-weight: bold;
+        }
+
+
+        /* =========================
+           TRAINING ROUNDS
+        ========================= */
+
+        .round-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .round-card {
+            background: #f4f7fc;
+
+            border-left: 5px solid #0066cc;
+
+            padding: 18px;
+
+            border-radius: 10px;
+
+            text-align: center;
+        }
+
+        .round-card h3 {
+            color: #0066cc;
+            margin-bottom: 10px;
+        }
+
+        .completed {
+            color: green;
+            font-weight: bold;
+        }
+
+
+        /* =========================
+           PERFORMANCE
+        ========================= */
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        .metric-card {
+            background: #f4f7fc;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .metric-card h3 {
+            color: #0066cc;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .metric-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #222;
+        }
+
+
+        /* =========================
+           MODEL INFORMATION
+        ========================= */
+
+        .model-info {
+            margin-top: 20px;
+
+            background: #f4f7fc;
+
+            padding: 18px;
+
+            border-radius: 10px;
+
+            line-height: 2;
+        }
+
+        .model-info strong {
+            color: #0066cc;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 950px) {
+
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .hospital-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .summary-grid,
+            .hospital-grid,
+            .metrics-grid,
+            .round-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-header h1 {
+                font-size: 30px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ==========================================
+     NAVIGATION
+========================================== -->
+
+<nav class="navbar">
+
+    <div class="logo">
+
+        <h2>
+            Liver Tumor Detection
+        </h2>
+
+    </div>
+
+
+    <ul class="nav-links">
+
+    <li>
+        <a href="/">Home</a>
+    </li>
+
+    <li>
+        <a href="/prediction">Prediction</a>
+    </li>
+
+    <li>
+        <a href="/dashboard">Dashboard</a>
+    </li>
+
+    <li>
+        <a href="/graph">Graph</a>
+    </li>
+
+    <li>
+        <a href="/about">About</a>
+    </li>
+
+</ul>
+
+</nav>
+
+
+<!-- ==========================================
+     DASHBOARD
+========================================== -->
+
+<div class="dashboard-container">
+
+
+    <div class="dashboard-header">
+
+        <h1>
+            Federated Learning Dashboard
+        </h1>
+
+        <p>
+            Privacy-Preserving Collaborative Liver Tumor Segmentation
+        </p>
+
+    </div>
+
+
+    <!-- ======================================
+         SUMMARY
+    ======================================= -->
+
+    <div class="summary-grid">
+
+
+        <div class="summary-card">
+
+            <h3>
+                Participating Hospitals
+            </h3>
+
+            <div class="summary-value">
+                5
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <h3>
+                Training Images
+            </h3>
+
+            <div class="summary-value">
+                3,608
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <h3>
+                Federated Rounds
+            </h3>
+
+            <div class="summary-value">
+                3
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <h3>
+                Model
+            </h3>
+
+            <div class="summary-value">
+                SANet
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ======================================
+         FEDERATED ARCHITECTURE
+    ======================================= -->
+
+    <div class="dashboard-section">
+
+        <h2>
+            Federated Learning Architecture
+        </h2>
+
+
+        <div class="hospital-grid">
+
+
+            <div class="hospital-card">
+
+                <h3>
+                    Hospital 1
+                </h3>
+
+                <p>
+                    746 Images
+                </p>
+
+                <p>
+                    746 Masks
+                </p>
+
+                <p>
+                    Local Training
+                </p>
+
+            </div>
+
+
+            <div class="hospital-card">
+
+                <h3>
+                    Hospital 2
+                </h3>
+
+                <p>
+                    851 Images
+                </p>
+
+                <p>
+                    851 Masks
+                </p>
+
+                <p>
+                    Local Training
+                </p>
+
+            </div>
+
+
+            <div class="hospital-card">
+
+                <h3>
+                    Hospital 3
+                </h3>
+
+                <p>
+                    782 Images
+                </p>
+
+                <p>
+                    782 Masks
+                </p>
+
+                <p>
+                    Local Training
+                </p>
+
+            </div>
+
+
+            <div class="hospital-card">
+
+                <h3>
+                    Hospital 4
+                </h3>
+
+                <p>
+                    551 Images
+                </p>
+
+                <p>
+                    551 Masks
+                </p>
+
+                <p>
+                    Local Training
+                </p>
+
+            </div>
+
+
+            <div class="hospital-card">
+
+                <h3>
+                    Hospital 5
+                </h3>
+
+                <p>
+                    678 Images
+                </p>
+
+                <p>
+                    678 Masks
+                </p>
+
+                <p>
+                    Local Training
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="flow-arrow">
+
+            ↓
+
+            <br>
+
+            Model Updates / Weights
+
+            <br>
+
+            ↓
+
+        </div>
+
+
+        <div class="server-box">
+
+            <h3>
+                Federated Server
+            </h3>
+
+            <p>
+                Flower Framework
+            </p>
+
+            <p>
+                Federated Averaging (FedAvg)
+            </p>
+
+            <p>
+                Global SANet Model
+            </p>
+
+        </div>
+
+
+        <div class="privacy-box">
+
+            <strong>
+                Privacy Preservation
+            </strong>
+
+            <br>
+
+            CT images and segmentation masks remain
+            within the participating hospitals.
+
+            Only model updates are exchanged during
+            federated training.
+
+        </div>
+
+    </div>
+
+
+    <!-- ======================================
+         HOSPITAL DATA
+    ======================================= -->
+
+    <div class="dashboard-section">
+
+        <h2>
+            Participating Hospital Data
+        </h2>
+
+
+        <table class="hospital-table">
+
+            <tr>
+
+                <th>
+                    Hospital
+                </th>
+
+                <th>
+                    Images
+                </th>
+
+                <th>
+                    Masks
+                </th>
+
+                <th>
+                    Status
+                </th>
+
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    Hospital 1
+                </td>
+
+                <td>
+                    746
+                </td>
+
+                <td>
+                    746
+                </td>
+
+                <td class="status">
+                    Completed
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    Hospital 2
+                </td>
+
+                <td>
+                    851
+                </td>
+
+                <td>
+                    851
+                </td>
+
+                <td class="status">
+                    Completed
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    Hospital 3
+                </td>
+
+                <td>
+                    782
+                </td>
+
+                <td>
+                    782
+                </td>
+
+                <td class="status">
+                    Completed
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    Hospital 4
+                </td>
+
+                <td>
+                    551
+                </td>
+
+                <td>
+                    551
+                </td>
+
+                <td class="status">
+                    Completed
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    Hospital 5
+                </td>
+
+                <td>
+                    678
+                </td>
+
+                <td>
+                    678
+                </td>
+
+                <td class="status">
+                    Completed
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <th>
+                    Total
+                </th>
+
+                <th>
+                    3,608
+                </th>
+
+                <th>
+                    3,608
+                </th>
+
+                <th>
+                    ✓
+                </th>
+
+            </tr>
+
+        </table>
+
+    </div>
+
+
+    <!-- ======================================
+         FEDERATED TRAINING
+    ======================================= -->
+
+    <div class="dashboard-section">
+
+        <h2>
+            Federated Training Status
+        </h2>
+
+
+        <div class="round-grid">
+
+
+            <div class="round-card">
+
+                <h3>
+                    Round 1
+                </h3>
+
+                <p class="completed">
+                    ✓ Completed
+                </p>
+
+                <p>
+                    5 Clients
+                </p>
+
+            </div>
+
+
+            <div class="round-card">
+
+                <h3>
+                    Round 2
+                </h3>
+
+                <p class="completed">
+                    ✓ Completed
+                </p>
+
+                <p>
+                    Completed Successfully
+                </p>
+
+            </div>
+
+
+            <div class="round-card">
+
+                <h3>
+                    Round 3
+                </h3>
+
+                <p class="completed">
+                    ✓ Completed
+                </p>
+
+                <p>
+                    Completed Successfully
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ======================================
+         SANET PERFORMANCE
+    ======================================= -->
+
+    <div class="dashboard-section">
+
+        <h2>
+            SANet Validation Performance
+        </h2>
+
+
+        <div class="metrics-grid">
+
+
+            <div class="metric-card">
+
+                <h3>
+                    Best Dice Score
+                </h3>
+
+                <div class="metric-value">
+                    61.52%
+                </div>
+
+            </div>
+
+
+            <div class="metric-card">
+
+                <h3>
+                    Best IoU
+                </h3>
+
+                <div class="metric-value">
+                    51.03%
+                </div>
+
+            </div>
+
+
+            <div class="metric-card">
+
+                <h3>
+                    Training Epochs
+                </h3>
+
+                <div class="metric-value">
+                    10
+                </div>
+
+            </div>
+
+
+            <div class="metric-card">
+
+                <h3>
+                    Validation Images
+                </h3>
+
+                <div class="metric-value">
+                    451
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="model-info">
+
+            <strong>
+                Segmentation Model:
+            </strong>
+
+            SANet
+
+            &nbsp;&nbsp; | &nbsp;&nbsp;
+
+
+            <strong>
+                Framework:
+            </strong>
+
+            PyTorch
+
+            &nbsp;&nbsp; | &nbsp;&nbsp;
+
+
+            <strong>
+                Federated Framework:
+            </strong>
+
+            Flower
+
+            &nbsp;&nbsp; | &nbsp;&nbsp;
+
+
+            <strong>
+                Task:
+            </strong>
+
+            Liver Tumor Segmentation
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,13 @@
+flask
+torch
+torchvision
+opencv-python
+numpy
+matplotlib
+Pillow
+scikit-image
+scikit-learn
+flwr
+monai
+tqdm
+segment-anything

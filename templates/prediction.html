@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Liver Tumor Prediction</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        .prediction-container {
+            width: 90%;
+            max-width: 900px;
+            margin: 35px auto;
+        }
+
+        .prediction-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .prediction-header h1 {
+            color: #0066cc;
+            font-size: 38px;
+            margin-bottom: 10px;
+        }
+
+        .prediction-header p {
+            color: #555;
+            font-size: 17px;
+        }
+
+        .upload-card {
+            background: white;
+            padding: 35px;
+            border-radius: 14px;
+
+            box-shadow:
+                0 3px 12px rgba(0,0,0,0.12);
+
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .upload-card h2 {
+            color: #0066cc;
+            margin-bottom: 15px;
+        }
+
+        .upload-card p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .file-input {
+            margin: 25px 0;
+        }
+
+        .file-input input {
+            padding: 12px;
+            font-size: 16px;
+        }
+
+        .predict-btn {
+            padding: 13px 30px;
+
+            background: #0066cc;
+
+            color: white;
+
+            border: none;
+
+            border-radius: 8px;
+
+            font-size: 17px;
+
+            cursor: pointer;
+        }
+
+        .predict-btn:hover {
+            background: #004d99;
+        }
+
+        .instructions-card {
+            background: white;
+
+            padding: 28px;
+
+            border-radius: 14px;
+
+            box-shadow:
+                0 3px 12px rgba(0,0,0,0.12);
+        }
+
+        .instructions-card h2 {
+            color: #0066cc;
+            margin-bottom: 18px;
+        }
+
+        .instructions-card ul {
+            text-align: left;
+            line-height: 1.9;
+            color: #444;
+        }
+
+        .instructions-card li {
+            margin-bottom: 7px;
+        }
+
+        .output-list {
+            margin-top: 8px;
+            margin-left: 25px;
+        }
+
+        .model-box {
+            background: #f4f7fc;
+
+            border-left: 5px solid #0066cc;
+
+            padding: 16px;
+
+            margin-top: 20px;
+
+            border-radius: 8px;
+
+            text-align: left;
+
+            line-height: 1.7;
+        }
+
+        .model-box strong {
+            color: #0066cc;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ==========================================
+     NAVIGATION
+========================================== -->
+
+<nav class="navbar">
+
+    <div class="logo">
+
+        <h2>
+            Liver Tumor Detection
+        </h2>
+
+    </div>
+
+
+   <ul class="nav-links">
+
+    <li>
+        <a href="/">Home</a>
+    </li>
+
+    <li>
+        <a href="/prediction">Prediction</a>
+    </li>
+
+    <li>
+        <a href="/dashboard">Dashboard</a>
+    </li>
+
+    <li>
+        <a href="/graph">Graph</a>
+    </li>
+
+    <li>
+        <a href="/about">About</a>
+    </li>
+
+</ul>
+
+</nav>
+
+
+<!-- ==========================================
+     PREDICTION PAGE
+========================================== -->
+
+<div class="prediction-container">
+
+
+    <div class="prediction-header">
+
+        <h1>
+            Liver Tumor Prediction
+        </h1>
+
+        <p>
+            Upload a liver PET-CT scan to perform automated
+            tumor segmentation and detection.
+        </p>
+
+    </div>
+
+
+    <!-- ======================================
+         UPLOAD CARD
+    ======================================= -->
+
+    <div class="upload-card">
+
+        <h2>
+            Upload Liver PET-CT Scan
+        </h2>
+
+        <p>
+            Please upload a liver CT scan image for
+            tumor detection and segmentation.
+        </p>
+
+        <p>
+            Supported formats:
+            <strong>.png</strong>,
+            <strong>.jpg</strong>,
+            <strong>.jpeg</strong>
+        </p>
+
+
+        <form action="/predict"
+              method="POST"
+              enctype="multipart/form-data">
+
+
+            <div class="file-input">
+
+                <input
+                    type="file"
+                    name="image"
+                    accept=".png,.jpg,.jpeg"
+                    required>
+
+            </div>
+
+
+            <button
+                class="predict-btn"
+                type="submit">
+
+                Predict Tumor
+
+            </button>
+
+
+        </form>
+
+    </div>
+
+
+    <!-- ======================================
+         INSTRUCTIONS
+    ======================================= -->
+
+    <div class="instructions-card">
+
+        <h2>
+            Instructions
+        </h2>
+
+
+        <ul>
+
+            <li>
+                Upload only a
+                <strong>liver CT scan</strong>.
+            </li>
+
+            <li>
+                Do not upload normal photographs
+                or unrelated images.
+            </li>
+
+            <li>
+                The system uses a
+                <strong>SANet segmentation model</strong>
+                for liver tumor segmentation.
+            </li>
+
+            <li>
+                The model is trained using
+                <strong>PyTorch</strong>.
+            </li>
+
+            <li>
+                The federated training framework uses
+                <strong>Flower</strong>.
+            </li>
+
+            <li>
+                Patient images remain within the
+                local training environment during
+                federated training.
+            </li>
+
+        </ul>
+
+
+        <!-- ==================================
+             PREDICTION OUTPUTS
+        =================================== -->
+
+        <div class="model-box">
+
+            <strong>
+                Prediction Results
+            </strong>
+
+            <ul class="output-list">
+
+                <li>
+                    Original CT Scan
+                </li>
+
+                <li>
+                    Predicted Tumor Mask
+                </li>
+
+                <li>
+                    Tumor Detection Status
+                </li>
+
+                <li>
+                    Confidence Score
+                </li>
+
+                <li>
+                    Dice Score
+                </li>
+
+                <li>
+                    IoU
+                </li>
+
+                <li>
+                    Precision
+                </li>
+
+                <li>
+                    Recall
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

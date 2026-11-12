@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>About Project</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        .about-container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 30px auto;
+            text-align: center;
+        }
+
+        .about-container h1 {
+            color: #0066cc;
+            font-size: 38px;
+            margin-bottom: 22px;
+        }
+
+        .about-box {
+            background: white;
+            padding: 25px 35px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.15);
+        }
+
+        .about-intro {
+            font-size: 18px;
+            line-height: 1.5;
+            color: #444;
+            margin-bottom: 22px;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .info-card {
+            background: #f4f7fc;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #0066cc;
+        }
+
+        .info-card h3 {
+            color: #0066cc;
+            margin: 0 0 7px 0;
+        }
+
+        .info-card p {
+            margin: 0;
+            color: #444;
+            line-height: 1.35;
+        }
+
+        .technology-title {
+            color: #0066cc;
+            margin-top: 22px;
+            margin-bottom: 12px;
+        }
+
+        .tech-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .tech-table th {
+            background: #0066cc;
+            color: white;
+            padding: 9px;
+        }
+
+        .tech-table td {
+            border: 1px solid #ddd;
+            padding: 9px;
+            background: white;
+        }
+
+        .tech-table td:first-child {
+            font-weight: bold;
+        }
+
+        .note {
+            margin-top: 15px;
+            padding: 10px;
+            background: #eef5ff;
+            border-radius: 8px;
+            color: #444;
+            font-size: 14px;
+        }
+
+        @media (max-width: 800px) {
+
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .about-container h1 {
+                font-size: 30px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ===================================================== -->
+<!-- NAVBAR -->
+<!-- ===================================================== -->
+
+<nav class="navbar">
+
+    <div class="logo">
+
+        <h2>Liver Tumor Detection</h2>
+
+    </div>
+
+
+    <ul class="nav-links">
+
+    <li>
+        <a href="/">Home</a>
+    </li>
+
+    <li>
+        <a href="/prediction">Prediction</a>
+    </li>
+
+    <li>
+        <a href="/dashboard">Dashboard</a>
+    </li>
+
+    <li>
+        <a href="/graph">Graph</a>
+    </li>
+
+    <li>
+        <a href="/about">About</a>
+    </li>
+
+</ul>
+
+</nav>
+
+
+<!-- ===================================================== -->
+<!-- ABOUT PROJECT -->
+<!-- ===================================================== -->
+
+<div class="about-container">
+
+    <h1>About the Project</h1>
+
+
+    <div class="about-box">
+
+
+        <p class="about-intro">
+
+            A privacy-preserving liver tumor segmentation
+            system combining <b>MedSAM, SANet, and Federated
+            Learning</b> for automated medical image analysis
+            while keeping patient data local.
+
+        </p>
+
+
+        <!-- ================================================= -->
+        <!-- PROJECT FEATURES -->
+        <!-- ================================================= -->
+
+        <div class="about-grid">
+
+
+            <div class="info-card">
+
+                <h3>Vision Transformer</h3>
+
+                <p>
+                    MedSAM and SANet are used for automated
+                    liver tumor segmentation.
+                </p>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <h3>Federated Learning</h3>
+
+                <p>
+                    Enables collaborative training without
+                    sharing patient medical images.
+                </p>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <h3>PET–CT Dataset</h3>
+
+                <p>
+                    Multimodal PET–CT images are used for
+                    liver tumor segmentation.
+                </p>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <h3>Tumor Analysis</h3>
+
+                <p>
+                    Provides tumor detection, confidence,
+                    severity, and segmentation metrics.
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- TECHNOLOGIES USED -->
+        <!-- ================================================= -->
+
+        <h2 class="technology-title">
+            Technologies Used
+        </h2>
+
+
+        <table class="tech-table">
+
+            <tr>
+
+                <th>
+                    Component
+                </th>
+
+                <th>
+                    Technology
+                </th>
+
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    Frontend
+                </td>
+
+                <td>
+                    HTML, CSS
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    Backend
+                </td>
+
+                <td>
+                    Python Flask
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    Deep Learning
+                </td>
+
+                <td>
+                    PyTorch
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    Segmentation
+                </td>
+
+                <td>
+                    MedSAM + SANet
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    Federated Learning
+                </td>
+
+                <td>
+                    Flower Framework
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    Evaluation
+                </td>
+
+                <td>
+                    Dice Score, IoU, Precision, Recall
+                </td>
+
+            </tr>
+
+        </table>
+
+
+        <!-- ================================================= -->
+        <!-- PRIVACY NOTE -->
+        <!-- ================================================= -->
+
+        <div class="note">
+
+            <b>Privacy Focus:</b>
+            Patient medical images remain local during
+            federated training.
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+</body>
+
+</html>

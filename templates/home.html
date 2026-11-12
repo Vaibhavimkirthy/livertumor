@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liver Tumor Detection</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <div class="logo">
+            <h2>Liver Tumor Detection</h2>
+        </div>
+
+       <ul class="nav-links">
+
+    <li>
+        <a href="/">Home</a>
+    </li>
+
+    <li>
+        <a href="/prediction">Prediction</a>
+    </li>
+
+    <li>
+        <a href="/dashboard">Dashboard</a>
+    </li>
+
+    <li>
+        <a href="/graph">Graph</a>
+    </li>
+
+    <li>
+        <a href="/about">About</a>
+    </li>
+
+</ul>
+
+    </nav>
+
+    <div class="hero">
+
+        <h1>Liver Tumor Detection Using Vision Transformer and Federated Learning</h1>
+
+        <p>
+            This project detects liver tumors from PET-CT scan images using Vision Transformer (MedSAM + SANet) with Federated Learning (Flower Framework).
+        </p>
+
+
+        <a href="/prediction">
+            <button class="btn">
+            Start Prediction
+        </button>
+        </a>
+
+    </div>
+
+    <div class="features">
+
+        <div class="card">
+            <h3>Vision Transformer</h3>
+            <p>Medical image segmentation using MedSAM and SANet.</p>
+        </div>
+
+        <div class="card">
+            <h3>Federated Learning</h3>
+            <p>Train models across hospitals without sharing patient data.</p>
+        </div>
+
+        <div class="card">
+            <h3>PET–CT Dataset</h3>
+            <p>Multimodal PET–CT images for liver tumor segmentation.</p>
+        </div>
+
+        <div class="card">
+            <h3>Evaluation</h3>
+            <p>Dice Score, IoU, Precision and Recall.</p>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
